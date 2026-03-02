@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FoundationsChat Web</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #050505;
+        --panel: #0f0f0f;
+        --text: #f2f2f2;
+        --muted: #b5b5b5;
+        --accent: #d7d7d7;
+        --border: #262626;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "SF Pro Text", "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #151515, var(--bg) 55%);
+        color: var(--text);
+      }
+
+      .container {
+        width: min(1080px, 92vw);
+        margin: 0 auto;
+        padding: 24px 0 64px;
+      }
+
+      .hero {
+        text-align: center;
+        margin-bottom: 36px;
+      }
+
+      .preview-note {
+        display: inline-block;
+        margin-bottom: 14px;
+        padding: 8px 12px;
+        border: 1px solid #3a2a2a;
+        border-radius: 999px;
+        background: #1a1010;
+        color: #ffb0b0;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
+      }
+
+      .hero-icon {
+        width: 84px;
+        height: 84px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        display: block;
+        margin: 0 auto 14px;
+        background: #0a0a0a;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(1.9rem, 2.8vw, 3rem);
+        line-height: 1.15;
+      }
+
+      .subtitle {
+        margin: 0 auto;
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 1.05rem;
+      }
+
+      .version {
+        display: inline-block;
+        margin-top: 0;
+        padding: 6px 12px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--accent);
+        font-size: 0.9rem;
+      }
+
+      .version-row {
+        margin-top: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        column-gap: 12px;
+        row-gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .cards {
+        margin: 0;
+        display: grid;
+        gap: 12px;
+      }
+
+      .content {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.35fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .card {
+        background: #0f0f0f;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+      }
+
+      .card strong {
+        color: #ffffff;
+      }
+
+      .card p {
+        margin: 8px 0 0;
+        color: var(--muted);
+      }
+
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+      }
+
+      .download-panel {
+        margin-top: 22px;
+        padding: 14px;
+        background: #0f0f0f;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        text-align: left;
+      }
+
+      .download-panel label {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .download-panel a {
+        color: #f0f0f0;
+      }
+
+      .assent-note {
+        margin: 8px 0 0;
+        color: #9f9f9f;
+        font-size: 0.85rem;
+      }
+
+      .assent-status {
+        margin: 8px 0 0;
+        color: #8fd7a4;
+        font-size: 0.8rem;
+      }
+
+      .download-panel input[type="checkbox"] {
+        margin-top: 2px;
+      }
+
+      .download-btn {
+        margin-top: 12px;
+        display: inline-block;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid #ffffff;
+        background: #303030;
+        color: #000000;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .download-btn:hover {
+        background: #e9e9e9;
+      }
+
+      .download-btn[aria-disabled="true"] {
+        pointer-events: none;
+        opacity: 1;
+        background: #242424;
+        border-color: #5a5a5a;
+        color: #b3b3b3;
+      }
+
+      .shot {
+        margin: 0;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px;
+        background: #0b0b0b;
+      }
+
+      .shot img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        border-radius: 6px;
+        display: block;
+        background: #000000;
+      }
+
+      .shot-btn {
+        border: 0;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        width: 100%;
+        cursor: pointer;
+      }
+
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.88);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 50;
+      }
+
+      .lightbox.open {
+        display: flex;
+      }
+
+      .lightbox-content {
+        position: relative;
+        max-width: min(1100px, 94vw);
+        max-height: 90vh;
+      }
+
+      #lightbox-img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 90vh;
+        border: 1px solid #303030;
+        border-radius: 10px;
+        background: #050505;
+        display: block;
+      }
+
+      .lightbox-close {
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        width: 34px;
+        height: 34px;
+        border: 1px solid #454545;
+        border-radius: 999px;
+        background: #111111;
+        color: #f2f2f2;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      .copyright {
+        margin-top: 18px;
+        text-align: center;
+        color: #8f8f8f;
+        font-size: 0.85rem;
+      }
+
+      .support-note {
+        margin-top: 16px;
+        text-align: center;
+        color: #b9b9b9;
+        font-size: 0.9rem;
+      }
+
+      .support-note code {
+        color: #f2f2f2;
+        background: #121212;
+        border: 1px solid #2e2e2e;
+        border-radius: 8px;
+        padding: 2px 6px;
+      }
+
+      .repo-link {
+        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        text-align: center;
+        font-size: 0.9rem;
+      }
+
+      .repo-link a {
+        color: #dcdcdc;
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          padding-top: 32px;
+        }
+
+        .content {
+          margin-top: 22px;
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <section class="hero">
+        <p class="preview-note">Public Beta — may change frequently as we continue improving the experience, use with care.</p>
+        <img class="hero-icon" src="AppIcon.png" alt="Foundations Chat app icon" />
+        <h1>Local-first AI Chat for Mac</h1>
+        <p class="subtitle">
+          Local-first AI chat powered by on-device intelligence.
+        </p>
+        <div class="version-row">
+          <span class="version">Latest Version 0.3.3</span>
+          <p class="repo-link version">
+            Github:
+            <a
+              href="https://github.com/codeeverywhereca/FoundationsLLMChat"
+              target="_blank"
+              rel="noopener noreferrer"
+              >FoundationsLLMChat</a
+            >
+          </p>
+        </div>
+      </section>
+
+      <section class="content" aria-label="Features and previews">
+        <section class="cards" aria-label="Key points">
+          <article class="card">
+            <strong>Private by design</strong>
+            <p>
+              Everything runs locally so your data never leaves this Mac.
+            </p>
+          </article>
+          <article class="card">
+            <strong>On-device intelligence</strong>
+            <p>
+              Powered by Apple's on-device Foundation Model for fast,
+              responsive answers.
+            </p>
+          </article>
+          <article class="card">
+            <strong>Verify important results</strong>
+            <p>
+              LLMs can be wrong; always confirm critical or sensitive
+              information.
+            </p>
+          </article>
+          <article class="card">
+            <strong>Permission notice</strong>
+            <p>
+              This app will request microphone and calendar access only for
+              voice input and scheduling features.
+            </p>
+          </article>
+        </section>
+
+        <section class="gallery" aria-label="App previews">
+          <figure class="shot">
+            <button class="shot-btn" type="button">
+              <img src="1-converse-chat.png" alt="Converse chat preview" />
+            </button>
+          </figure>
+          <figure class="shot">
+            <button class="shot-btn" type="button">
+              <img src="2-draw-chat.png" alt="Draw chat preview" />
+            </button>
+          </figure>
+          <figure class="shot">
+            <button class="shot-btn" type="button">
+              <img src="3-bubble-mode-1.png" alt="Bubble mode preview one" />
+            </button>
+          </figure>
+          <figure class="shot">
+            <button class="shot-btn" type="button">
+              <img src="5-code-chat-1.png" alt="Code chat preview one" />
+            </button>
+          </figure>
+          <figure class="shot">
+            <button class="shot-btn" type="button">
+              <img src="6-code-chat-2.png" alt="Code chat preview two" />
+            </button>
+          </figure>
+        </section>
+      </section>
+      <section class="download-panel" aria-label="DMG download">
+        <label for="share-check">
+          <input type="checkbox" id="share-check" />
+          <span>I have read and agree to the <a href="https://github.com/codeeverywhereca/FoundationsLLMChat/blob/main/TERMS.md" target="_blank" rel="noopener noreferrer">Terms</a> (last updated February 22, 2026).</span>
+        </label>
+		<!-- <p class="assent-note">...</p> -->
+<!--         <p class="assent-status" id="assent-status"></p> -->
+        <a
+          id="download-link"
+          class="download-btn"
+          href="FoundationsChat-0.3.3.dmg"
+          download
+          aria-disabled="true"
+          >Download DMG</a
+        >
+      </section>
+      <p class="support-note">
+        Find this useful? Consider supporting the project. BTC
+        <code>19u6CWTxH4cH9V2yTfAemA7gmmh7rANgiv</code>
+      </p>
+      <p class="copyright">© 2026 FoundationsChat. All rights reserved.</p>
+    </main>
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <div class="lightbox-content">
+        <button
+          class="lightbox-close"
+          id="lightbox-close"
+          type="button"
+          aria-label="Close large screenshot"
+        >
+          ×
+        </button>
+        <img id="lightbox-img" src="" alt="Large screenshot preview" />
+      </div>
+    </div>
+    <script>
+      const shareCheck = document.getElementById("share-check");
+      const downloadLink = document.getElementById("download-link");
+      const assentStatus = document.getElementById("assent-status");
+      const shotButtons = document.querySelectorAll(".shot-btn");
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightbox-img");
+      const lightboxClose = document.getElementById("lightbox-close");
+      const TERMS_VERSION = "2026-02-22";
+      const ACCEPTANCE_KEY = "foundations_chat_terms_acceptance";
+
+      function updateDownloadState() {
+        downloadLink.setAttribute(
+          "aria-disabled",
+          shareCheck.checked ? "false" : "true"
+        );
+      }
+
+      shareCheck.addEventListener("change", function () {
+        if (shareCheck.checked) {
+          const acceptance = {
+            termsVersion: TERMS_VERSION,
+            acceptedAt: new Date().toISOString(),
+          };
+          localStorage.setItem(ACCEPTANCE_KEY, JSON.stringify(acceptance));
+        } else {
+          localStorage.removeItem(ACCEPTANCE_KEY);
+        }
+        updateDownloadState();
+      });
+
+      downloadLink.addEventListener("click", function (event) {
+        if (downloadLink.getAttribute("aria-disabled") === "true") {
+          event.preventDefault();
+          return;
+        }
+        const acceptance = {
+          termsVersion: TERMS_VERSION,
+          acceptedAt: new Date().toISOString(),
+          action: "download-click",
+        };
+        localStorage.setItem(ACCEPTANCE_KEY, JSON.stringify(acceptance));
+      });
+     
+      updateDownloadState();
+
+      shotButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          const img = button.querySelector("img");
+          lightboxImg.src = img.src;
+          lightboxImg.alt = img.alt;
+          lightbox.classList.add("open");
+          lightbox.setAttribute("aria-hidden", "false");
+        });
+      });
+
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        lightbox.setAttribute("aria-hidden", "true");
+      }
+
+      lightboxClose.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", function (event) {
+        if (event.target === lightbox) {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && lightbox.classList.contains("open")) {
+          closeLightbox();
+        }
+      });
+    </script>
+    	<script>
+		(function(g, l, a, n, c, e, cw) {
+			g['GlanceAnalyticsObject'] = c;
+			g[c] = g[c] || function() {
+		    (g[c].q = g[c].q || []).push(arguments)
+		  }, g[c].t = new Date().getTime();
+		  
+		  g[c].API = 'codeeverywhere.ca/track.php';		
+		  e = l.createElement(a),
+		  cw = l.getElementsByTagName(a)[0];
+		  e.async = 1;
+		  e.src = n;
+		  cw.parentNode.insertBefore(e, cw)
+		  
+		})(window, document, 'script', '//codeeverywhere.ca/glance.min.js', 'glance');
+		
+		glance('pageview');
+		</script>
+  </body>
+</html>
